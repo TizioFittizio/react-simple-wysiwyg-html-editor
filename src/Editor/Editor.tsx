@@ -1,24 +1,30 @@
 import * as React from 'react';
+import { EditorProps } from './Editor.types';
 import './Editor.css';
-
-interface Props {
-    
-}
 
 interface State {
     
 }
 
-class Editor extends React.Component<Props, State> {
+class Editor extends React.Component<EditorProps, State> {
 
-    public constructor(props: Props){
+    public constructor(props: EditorProps){
         super(props);
     }
 
     public render(){
         return (
-            <h1>Editor TODO</h1>
+            <div className={this.getEditorClassName()}>
+                <h1>Editor TODO</h1>
+            </div>
         );
+    }
+
+    private getEditorClassName(){
+        const { editorClassName } = this.props;
+        let className = 'editor-container';
+        if (editorClassName) className += ` ${editorClassName}`;
+        return className;
     }
 
 }

@@ -1,9 +1,8 @@
-import React from "react";
+import React from 'react';
 import Editor from './Editor';
 
 export default {
-  title: "Editor"
+  title: 'Editor'
 };
 
 export const Story = () => <Editor />;
-
