@@ -1,12 +1,16 @@
 {
   "name": "react-simple-wysiwyg-html-editor",
   "version": "0.1.0",
-  "description": "",
+  "main": "build/index.js",
+  "module": "build/index.es.js",
+  "files": [
+    "build"
+  ],
   "scripts": {
     "build": "rollup -c",
     "storybook": "start-storybook -p 6006",
     "storybook:export": "build-storybook",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublish": "npm run build"
   },
   "author": "Luca Campana",
   "license": "ISC",
@@ -29,10 +33,5 @@
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
-  },
-  "main": "build/index.js",
-  "module": "build/index.es.js",
-  "files": [
-    "build"
-  ]
+  }
 }
