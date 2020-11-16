@@ -4,6 +4,7 @@ import './Editor.css';
 import Toolbar from '../Toolbar/Toolbar';
 import BlockParagraph from '../BlockParagraph/BlockParagraph';
 import BlockHTML from '../BlockHTML/BlockHTML';
+import BlockWrapper from '../BlockWrapper/BlockWrapper';
 
 type HTMLBlock = { type: 'paragraph' | 'html', html: string };
 
@@ -48,17 +49,25 @@ class Editor extends React.Component<EditorProps, State> {
             case 'paragraph':
                 console.log(block.html);
                 return (
-                    <BlockParagraph 
-                        html={block.html}
-                        onHTMLChange={newHTML => console.log(newHTML)}
-                        key={index}
-                    />
+                    <BlockWrapper
+                        icon='edit'
+                    >
+                        <BlockParagraph 
+                            html={block.html}
+                            onHTMLChange={newHTML => console.log(newHTML)}
+                            key={index}
+                        />
+                    </BlockWrapper>
                 );
             case 'html':
                 return (
-                    <BlockHTML
-                        key={index}
-                    />
+                    <BlockWrapper
+                        icon='edit'
+                    >
+                        <BlockHTML
+                            key={index}
+                        />
+                    </BlockWrapper>
                 );
         }
     }

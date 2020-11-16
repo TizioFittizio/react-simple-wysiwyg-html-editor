@@ -1,0 +1,25 @@
+.block-wrapper-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.block-wrapper-container .block-wrapper-options {
+    width: 75px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.block-wrapper-container .block-wrapper-options .options-icon {
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+}
+
+.block-wrapper-container .block-wrapper-options .options-icon.hide {
+    display: none;
+}
+
+.block-wrapper-container .block-wrapper-children {
+    flex: 1;
+}
