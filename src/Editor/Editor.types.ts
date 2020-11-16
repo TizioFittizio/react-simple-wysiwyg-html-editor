@@ -1,5 +1,5 @@
 export interface EditorProps {
-    HTML?: string;
+    HTML: string;
+    onHTMLEdit: (html: string) => void;
     editorClassName?: string;
-    onHTMLEdit?: (html: string) => void;
 }
