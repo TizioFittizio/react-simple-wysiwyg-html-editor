@@ -9,6 +9,13 @@
     margin-top: 7px;
 }
 
+.toolbar-container button {
+    width: 30px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
 .toolbar-container .separator {
     width: 0px;
     height: 25px;
