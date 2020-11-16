@@ -3,9 +3,12 @@ import { EditorProps } from './Editor.types';
 import './Editor.css';
 import Toolbar from '../Toolbar/Toolbar';
 import BlockParagraph from '../BlockParagraph/BlockParagraph';
+import BlockHTML from '../BlockHTML/BlockHTML';
+
+type HTMLBlock = { type: 'paragraph' | 'html', html: string };
 
 interface State {
-    HTMLBlocks: Array<{ type: 'paragraph' | 'html', content: string }>;
+    HTMLBlocks: Array<HTMLBlock>;
 }
 
 class Editor extends React.Component<EditorProps, State> {
@@ -35,12 +38,32 @@ class Editor extends React.Component<EditorProps, State> {
     private renderHTMLBlocks(){
         return (
             <div className='html-blocks-container'>
-                <BlockParagraph html='<h2>AAAAH</h2>' onHTMLChange={() => {}} onNewLineKeyPress={() => {}} />
+                {this.state.HTMLBlocks.map((x, i) => this.renderHTMLBlock(x, i))}
             </div>
         );
     }
 
-    private getHTMLBlocksFromHTML(html: string){
+    private renderHTMLBlock(block: HTMLBlock, index: number){
+        switch (block.type){
+            case 'paragraph':
+                console.log(block.html);
+                return (
+                    <BlockParagraph 
+                        html={block.html}
+                        onHTMLChange={newHTML => console.log(newHTML)}
+                        key={index}
+                    />
+                );
+            case 'html':
+                return (
+                    <BlockHTML
+                        key={index}
+                    />
+                );
+        }
+    }
+
+    private getHTMLBlocksFromHTML(html: string): HTMLBlock[] {
         const container = document.createElement('div');
         container.innerHTML = html;
         const containerChildren = container.children;
@@ -52,13 +75,13 @@ class Editor extends React.Component<EditorProps, State> {
         return blocks;
     }
 
-    private getHTMLBlockFromElement(element: Element){
+    private getHTMLBlockFromElement(element: Element): HTMLBlock {
         const tagName = element.tagName;
         if (Editor.PARAGRAPH_TAGS.includes(tagName)){
-            return { type: 'paragraph', html: element.innerHTML }
+            return { type: 'paragraph', html: element.outerHTML }
         }
         else {
-            return { type: 'html', html: element.innerHTML }
+            return { type: 'html', html: element.outerHTML }
         }
     }
 

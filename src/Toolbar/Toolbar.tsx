@@ -52,8 +52,9 @@ class Toolbar extends React.Component<Props, State> {
                     e.preventDefault();
                     this.executeCommand('formatblock', e.target.value);
                 }}
+                defaultValue='p'
             >
-                <option selected value='p'>Paragraph</option>
+                <option value='p'>Paragraph</option>
                 <option value='h1'>Title 1</option>
                 <option value='h2'>Title 2</option>
                 <option value='h3'>Title 3</option>
@@ -88,10 +89,11 @@ class Toolbar extends React.Component<Props, State> {
                     e.preventDefault();
                     this.executeCommand('fontsize', e.target.value)
                 }}
+                defaultValue='3'
             >
                 <option value='1'>Very small</option>
                 <option value='2'>A bit small</option>
-                <option selected value='3'>Normal</option>
+                <option value='3'>Normal</option>
                 <option value='4'>Medium-large</option>
                 <option value='5'>Big</option>
                 <option value='6'>Very big</option>

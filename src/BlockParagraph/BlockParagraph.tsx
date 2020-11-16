@@ -4,7 +4,6 @@ import './BlockParagraph.css';
 
 interface Props {
     html: string;
-    onNewLineKeyPress: () => void;
     onHTMLChange: (html: string) => void;
 }
 
@@ -25,7 +24,6 @@ class BlockParagraph extends React.Component<Props, State> {
                     tagName='div'
                     html={this.props.html}
                     onChange={e => this.onChange(e)}
-                    onKeyDown={e => this.onKeyDown(e)}
                 />
             </div>
         );
@@ -33,13 +31,6 @@ class BlockParagraph extends React.Component<Props, State> {
 
     private onChange(event: ContentEditableEvent){
         this.props.onHTMLChange(event.target.value);
-    }
-
-    private onKeyDown(event: React.KeyboardEvent<HTMLDivElement>){
-        if (event.key === 'Enter'){
-            event.preventDefault();
-            this.props.onNewLineKeyPress();
-        }
     }
 
 }
