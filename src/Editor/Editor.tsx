@@ -50,22 +50,27 @@ class Editor extends React.Component<EditorProps, State> {
                 console.log(block.html);
                 return (
                     <BlockWrapper
+                        key={index}
                         icon='edit'
+                        showMenuOnClick={true}
+                        showMenuButtonAddHTML={true}
+                        showMenuButtonAddParagraph={true}
+                        showMenuButtonDelete={true}
+                        showMenuButtonToggleReadonly={true}
                     >
                         <BlockParagraph 
                             html={block.html}
                             onHTMLChange={newHTML => console.log(newHTML)}
-                            key={index}
                         />
                     </BlockWrapper>
                 );
             case 'html':
                 return (
                     <BlockWrapper
+                        key={index}
                         icon='edit'
                     >
                         <BlockHTML
-                            key={index}
                         />
                     </BlockWrapper>
                 );
@@ -87,10 +92,10 @@ class Editor extends React.Component<EditorProps, State> {
     private getHTMLBlockFromElement(element: Element): HTMLBlock {
         const tagName = element.tagName;
         if (Editor.PARAGRAPH_TAGS.includes(tagName)){
-            return { type: 'paragraph', html: element.outerHTML }
+            return { type: 'paragraph', html: element.outerHTML.trim() }
         }
         else {
-            return { type: 'html', html: element.outerHTML }
+            return { type: 'html', html: element.outerHTML.trim() }
         }
     }
 

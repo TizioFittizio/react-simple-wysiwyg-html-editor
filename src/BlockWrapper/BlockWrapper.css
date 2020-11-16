@@ -1,10 +1,12 @@
 .block-wrapper-container {
+    position: relative;
     display: flex;
     flex-direction: row;
 }
 
 .block-wrapper-container .block-wrapper-options {
-    width: 75px;
+    width: 125px;
+    min-width: 125px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,4 +24,33 @@
 
 .block-wrapper-container .block-wrapper-children {
     flex: 1;
+}
+
+.block-wrapper-container .block-wrapper-menu {
+    position: absolute;
+    top: 20px;
+    left: 0px;
+    z-index: 1;
+    display: none;
+}
+
+.block-wrapper-container .block-wrapper-menu.show {
+    display: block;
+}
+
+.block-wrapper-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.block-wrapper-container ul li {
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-bottom: 1px solid black;
+    cursor: pointer;
 }
