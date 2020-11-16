@@ -5,4 +5,12 @@ export default {
   title: 'BlockParagraph'
 };
 
-export const Story = () => <BlockParagraph />;
+export const Story = () => {
+    return (
+        <BlockParagraph
+            html={'<p><h1>A very</h1> simple text</p>'}
+            onHTMLChange={html => console.log(html)}
+            onNewLineKeyPress={() => alert('NewLine')}
+        />
+    );
+}
