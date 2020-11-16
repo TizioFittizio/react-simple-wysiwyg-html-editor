@@ -11,10 +11,6 @@ interface State {
 
 class Toolbar extends React.Component<Props, State> {
 
-    // select title
-    // select font
-    // select size
-
     // undo
     // redo
     // remove formatting
@@ -38,6 +34,10 @@ class Toolbar extends React.Component<Props, State> {
         return (
             <div className='toolbar-container'>
                 {this.renderTitleSelect()}
+                {this.renderSeparator()}
+                {this.renderFontSelect()}
+                {this.renderSeparator()}
+                {this.renderSizeSelect()}
             </div>
         );
     }
@@ -59,6 +59,47 @@ class Toolbar extends React.Component<Props, State> {
                 <option value='h6'>Subtitle</option>
                 <option value='pre'>Preformatted</option>
             </select>
+        );
+    }
+
+    private renderFontSelect(){
+        return (
+            <select 
+                onChange={e => {
+                    e.preventDefault();
+                    this.executeCommand('fontname', e.target.value)
+                }}
+            >
+                <option>Arial</option>
+                <option>Arial Black</option>
+                <option>Courier New</option>
+                <option>Times New Roman</option>
+            </select>
+        );
+    }
+
+    private renderSizeSelect(){
+        return (
+            <select 
+                onChange={e => {
+                    e.preventDefault();
+                    this.executeCommand('fontsize', e.target.value)
+                }}
+            >
+                <option value='1'>Very small</option>
+                <option value='2'>A bit small</option>
+                <option selected value='3'>Normal</option>
+                <option value='4'>Medium-large</option>
+                <option value='5'>Big</option>
+                <option value='6'>Very big</option>
+                <option value='7'>Maximum</option>
+            </select>
+        );
+    }
+
+    private renderSeparator(){
+        return (
+            <div className='separator' />
         );
     }
 
