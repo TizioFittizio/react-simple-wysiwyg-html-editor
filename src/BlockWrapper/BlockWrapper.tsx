@@ -114,7 +114,7 @@ class BlockWrapper extends React.Component<Props, State> {
             menuItems.push({ text: 'Toggle Readonly', onClick: () => this.props.onMenuButtonToggleReadonly() });
         }
         if (props.showMenuButtonToggleShowHTML){
-            menuItems.push({ text: 'Show HTML/Text', onClick: () => this.props.onMenuButtonToggleShowHTML() });
+            menuItems.push({ text: 'Show HTML/Block', onClick: () => this.props.onMenuButtonToggleShowHTML() });
         }
         if (props.showMenuButtonAddParagraph){
             menuItems.push({ text: 'Add paragraph', onClick: () => this.props.onMenuButtonAddParagraph() });

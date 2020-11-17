@@ -41,6 +41,7 @@ class Editor extends React.Component<EditorProps, State> {
         return (
             <div className='html-blocks-container'>
                 {this.state.HTMLBlocks.map((x, i) => this.renderHTMLBlock(x, i))}
+                {this.renderBlockAdd()}
             </div>
         );
     }
@@ -73,6 +74,8 @@ class Editor extends React.Component<EditorProps, State> {
                 showMenuButtonDelete
                 showMenuButtonToggleReadonly
                 showMenuButtonToggleShowHTML
+                onMenuButtonAddParagraph={() => this.onAddingBlockParagraph(index)}
+                onMenuButtonDelete={() => this.onBlockHTMLRemove(index)}
             >
                 <BlockParagraph 
                     html={block.html}
@@ -82,10 +85,43 @@ class Editor extends React.Component<EditorProps, State> {
         );
     }
 
+    private renderBlockAdd(){
+        return (
+            <BlockWrapper
+                icon='new'
+                showMenuOnClick
+                showMenuButtonAddParagraph
+                showMenuButtonAddHTML
+                onMenuButtonAddParagraph={() => this.onAddingBlockParagraph(this.state.HTMLBlocks.length)}
+            >
+                <div style={{ width: '100%', height: '50px' }} />
+            </BlockWrapper>
+        );
+    }
+
+    private onAddingBlockParagraph(index: number){
+        const newBlocks = this.state.HTMLBlocks.slice();
+        const newElement = document.createElement('p');
+        newElement.innerHTML = 'Text';
+        const newBlock = this.getHTMLBlockFromElement(newElement);
+        newBlocks.splice(index + 1, 0, newBlock);
+        const newHTML = this.getHTMLFromHTMLBlocks(newBlocks);
+        this.setState({ HTMLBlocks: this.getHTMLBlocksFromHTML(newHTML) });
+        this.props.onHTMLEdit(newHTML);
+    }
+
     private onBlockHTMLChange({ html, block, index }: { html: string, block: HTMLBlock, index: number }){
         const newBlock = { ...block, html };
         const newBlocks = this.state.HTMLBlocks.slice();
         newBlocks.splice(index, 1, newBlock);
+        const newHTML = this.getHTMLFromHTMLBlocks(newBlocks);
+        this.setState({ HTMLBlocks: this.getHTMLBlocksFromHTML(newHTML) });
+        this.props.onHTMLEdit(newHTML);
+    }
+
+    private onBlockHTMLRemove(index: number){
+        const newBlocks = this.state.HTMLBlocks.slice();
+        newBlocks.splice(index, 1);
         const newHTML = this.getHTMLFromHTMLBlocks(newBlocks);
         this.setState({ HTMLBlocks: this.getHTMLBlocksFromHTML(newHTML) });
         this.props.onHTMLEdit(newHTML);
@@ -123,9 +159,6 @@ class Editor extends React.Component<EditorProps, State> {
         let innerHTML = block.html.trim();
         if (!innerHTML.startsWith('<')){
             switch (block.type){
-                case 'paragraph':
-                    innerHTML = `<p>${innerHTML}</p>`;
-                    break;
                 case 'html':
                     innerHTML = `<div>${innerHTML}</div>`;
                     break;

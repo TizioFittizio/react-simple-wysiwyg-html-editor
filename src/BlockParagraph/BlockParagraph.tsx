@@ -22,6 +22,7 @@ class BlockParagraph extends React.Component<Props, State> {
             <div className='block-paragraph-container'>
                 <ContentEditable
                     tagName='div'
+                    className='editable'
                     html={this.props.html}
                     onChange={e => this.onChange(e)}
                 />

@@ -2,3 +2,9 @@
     width: 100%;
     max-width: 700px;
 }
+
+.block-paragraph-container .editable {
+    width: 100%;
+    min-height: 50px;
+    resize: none;
+}
