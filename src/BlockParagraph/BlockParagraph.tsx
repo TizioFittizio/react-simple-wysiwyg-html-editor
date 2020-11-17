@@ -4,6 +4,8 @@ import './BlockParagraph.css';
 
 interface Props {
     html: string;
+    readonly: boolean;
+    showHTML: boolean;
     onHTMLChange: (html: string) => void;
 }
 
@@ -20,14 +22,31 @@ class BlockParagraph extends React.Component<Props, State> {
     public render(){
         return (
             <div className='block-paragraph-container'>
-                <ContentEditable
-                    tagName='div'
-                    className='editable'
-                    html={this.props.html}
-                    onChange={e => this.onChange(e)}
-                />
+                {this.props.showHTML ? this.renderTextarea() : this.renderEditable()}
             </div>
         );
+    }
+
+    private renderEditable(){
+        return (
+            <ContentEditable
+                tagName='div'
+                className='editable'
+                disabled={this.props.readonly}
+                html={this.props.html}
+                onChange={e => this.onChange(e)}
+            />
+        );
+    }
+
+    private renderTextarea(){
+        return (
+            <textarea
+                className='editable'
+                value={this.props.html}
+                readOnly={true}
+            />
+        )
     }
 
     private onChange(event: ContentEditableEvent){

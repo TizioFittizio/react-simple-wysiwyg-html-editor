@@ -6,7 +6,7 @@ import BlockParagraph from '../BlockParagraph/BlockParagraph';
 import BlockHTML from '../BlockHTML/BlockHTML';
 import BlockWrapper from '../BlockWrapper/BlockWrapper';
 
-type HTMLBlock = { type: 'paragraph' | 'html', html: string };
+type HTMLBlock = { type: 'paragraph' | 'html', html: string, readonly: boolean, showHTML: boolean };
 
 interface State {
     HTMLBlocks: Array<HTMLBlock>;
@@ -15,7 +15,6 @@ interface State {
 class Editor extends React.Component<EditorProps, State> {
 
     private static readonly PARAGRAPH_TAGS = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
-
 
     public constructor(props: EditorProps){
         super(props);
@@ -76,10 +75,14 @@ class Editor extends React.Component<EditorProps, State> {
                 showMenuButtonToggleShowHTML
                 onMenuButtonAddParagraph={() => this.onAddingBlockParagraph(index)}
                 onMenuButtonDelete={() => this.onBlockHTMLRemove(index)}
+                onMenuButtonToggleReadonly={() => this.onBlockHTMLToggleReadonly({ block, index })}
+                onMenuButtonToggleShowHTML={() => this.onBlockHTMLToggleHTMLVisualization({ block, index })}
             >
                 <BlockParagraph 
                     html={block.html}
                     onHTMLChange={html => this.onBlockHTMLChange({ html, block, index })}
+                    readonly={block.readonly}
+                    showHTML={block.showHTML}
                 />
             </BlockWrapper>
         );
@@ -127,6 +130,20 @@ class Editor extends React.Component<EditorProps, State> {
         this.props.onHTMLEdit(newHTML);
     }
 
+    private onBlockHTMLToggleReadonly({ block, index }: { block: HTMLBlock, index: number }){
+        const newBlock: HTMLBlock = { ...block, readonly: !block.readonly };
+        const newBlocks = this.state.HTMLBlocks.slice();
+        newBlocks.splice(index, 1, newBlock);
+        this.setState({ HTMLBlocks: newBlocks });
+    }
+
+    private onBlockHTMLToggleHTMLVisualization({ block, index }: { block: HTMLBlock, index: number }){
+        const newBlock: HTMLBlock = { ...block, showHTML: !block.showHTML };
+        const newBlocks = this.state.HTMLBlocks.slice();
+        newBlocks.splice(index, 1, newBlock);
+        this.setState({ HTMLBlocks: newBlocks });
+    }
+
     private getHTMLBlocksFromHTML(html: string): HTMLBlock[] {
         const container = document.createElement('div');
         container.innerHTML = html;
@@ -141,11 +158,23 @@ class Editor extends React.Component<EditorProps, State> {
 
     private getHTMLBlockFromElement(element: Element): HTMLBlock {
         const tagName = element.tagName;
+        const defaultProperties = {
+            readonly: false,
+            showHTML: false
+        }
         if (Editor.PARAGRAPH_TAGS.includes(tagName)){
-            return { type: 'paragraph', html: element.outerHTML.trim() }
+            return { 
+                type: 'paragraph', 
+                html: element.outerHTML.trim(),
+                ...defaultProperties 
+            }
         }
         else {
-            return { type: 'html', html: element.outerHTML.trim() }
+            return { 
+                type: 'html', 
+                html: element.outerHTML.trim(),
+                ...defaultProperties
+            }
         }
     }
 
