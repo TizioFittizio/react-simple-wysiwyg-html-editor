@@ -66,12 +66,10 @@ class Editor extends React.Component<EditorProps, State> {
                 showMenuButtonAddParagraph
                 showMenuButtonDelete
                 showMenuButtonToggleReadonly
-                showMenuButtonToggleShowHTML
                 onMenuButtonAddHTML={() => this.onAddingBlockHTML(index)}
                 onMenuButtonAddParagraph={() => this.onAddingBlockParagraph(index)}
                 onMenuButtonDelete={() => this.onBlockHTMLRemove(index)}
                 onMenuButtonToggleReadonly={() => this.onBlockHTMLToggleReadonly({ block, index })}
-                onMenuButtonToggleShowHTML={() => this.onBlockHTMLToggleHTMLVisualization({ block, index })}
             >
                 <BlockParagraph 
                     html={block.html}
@@ -93,9 +91,15 @@ class Editor extends React.Component<EditorProps, State> {
                 showMenuButtonAddParagraph
                 showMenuButtonDelete
                 showMenuButtonToggleShowHTML
+                onMenuButtonAddHTML={() => this.onAddingBlockHTML(index)}
+                onMenuButtonAddParagraph={() => this.onAddingBlockParagraph(index)}
                 onMenuButtonDelete={() => this.onBlockHTMLRemove(index)}
+                onMenuButtonToggleShowHTML={() => this.onBlockHTMLToggleHTMLVisualization({ block, index })}
             >
                 <BlockHTML
+                    html={block.html}
+                    onHTMLChange={html => this.onBlockHTMLChange({ html, block, index })}
+                    showHTML={block.showHTML}
                 />
             </BlockWrapper>
         );

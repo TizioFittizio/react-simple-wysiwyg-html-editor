@@ -9,11 +9,7 @@ interface Props {
     onHTMLChange: (html: string) => void;
 }
 
-interface State {
-    
-}
-
-class BlockParagraph extends React.Component<Props, State> {
+class BlockParagraph extends React.Component<Props, { }> {
 
     public constructor(props: Props){
         super(props);
