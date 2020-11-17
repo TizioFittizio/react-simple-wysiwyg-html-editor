@@ -16,6 +16,7 @@ class Editor extends React.Component<EditorProps, State> {
 
     private static readonly PARAGRAPH_TAGS = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 
+
     public constructor(props: EditorProps){
         super(props);
         this.state = { HTMLBlocks: this.getHTMLBlocksFromHTML(props.HTML) };
@@ -47,23 +48,7 @@ class Editor extends React.Component<EditorProps, State> {
     private renderHTMLBlock(block: HTMLBlock, index: number){
         switch (block.type){
             case 'paragraph':
-                console.log(block.html);
-                return (
-                    <BlockWrapper
-                        key={index}
-                        icon='edit'
-                        showMenuOnClick={true}
-                        showMenuButtonAddHTML={true}
-                        showMenuButtonAddParagraph={true}
-                        showMenuButtonDelete={true}
-                        showMenuButtonToggleReadonly={true}
-                    >
-                        <BlockParagraph 
-                            html={block.html}
-                            onHTMLChange={newHTML => console.log(newHTML)}
-                        />
-                    </BlockWrapper>
-                );
+                return this.renderBlockParagraph(block, index);
             case 'html':
                 return (
                     <BlockWrapper
@@ -75,6 +60,35 @@ class Editor extends React.Component<EditorProps, State> {
                     </BlockWrapper>
                 );
         }
+    }
+
+    private renderBlockParagraph(block: HTMLBlock, index: number){
+        return (
+            <BlockWrapper
+                key={index}
+                icon='edit'
+                showMenuOnClick
+                showMenuButtonAddHTML
+                showMenuButtonAddParagraph
+                showMenuButtonDelete
+                showMenuButtonToggleReadonly
+                showMenuButtonToggleShowHTML
+            >
+                <BlockParagraph 
+                    html={block.html}
+                    onHTMLChange={html => this.onBlockHTMLChange({ html, block, index })}
+                />
+            </BlockWrapper>
+        );
+    }
+
+    private onBlockHTMLChange({ html, block, index }: { html: string, block: HTMLBlock, index: number }){
+        const newBlock = { ...block, html };
+        const newBlocks = this.state.HTMLBlocks.slice();
+        newBlocks.splice(index, 1, newBlock);
+        const newHTML = this.getHTMLFromHTMLBlocks(newBlocks);
+        this.setState({ HTMLBlocks: this.getHTMLBlocksFromHTML(newHTML) });
+        this.props.onHTMLEdit(newHTML);
     }
 
     private getHTMLBlocksFromHTML(html: string): HTMLBlock[] {
@@ -97,6 +111,27 @@ class Editor extends React.Component<EditorProps, State> {
         else {
             return { type: 'html', html: element.outerHTML.trim() }
         }
+    }
+
+    private getHTMLFromHTMLBlocks(blocks: HTMLBlock[]){
+        let html = '';
+        for (const block of blocks) html += this.getHTMLFromHTMLBlock(block);
+        return html;
+    }
+
+    private getHTMLFromHTMLBlock(block: HTMLBlock){
+        let innerHTML = block.html.trim();
+        if (!innerHTML.startsWith('<')){
+            switch (block.type){
+                case 'paragraph':
+                    innerHTML = `<p>${innerHTML}</p>`;
+                    break;
+                case 'html':
+                    innerHTML = `<div>${innerHTML}</div>`;
+                    break;
+            }
+        }
+        return innerHTML;
     }
 
     private getEditorClassName(){
