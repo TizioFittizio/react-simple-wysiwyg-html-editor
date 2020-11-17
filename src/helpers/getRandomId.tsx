@@ -1,1 +1,1 @@
-export const getRandomId = () => String(Math.random() * 1000000)
+export const getRandomId = () => String(Math.floor(Math.random() * 1000000))

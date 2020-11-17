@@ -3,10 +3,12 @@ import ContentEditable, { ContentEditableEvent } from 'react-contenteditable';
 import './BlockParagraph.css';
 
 interface Props {
+    id: string;
     html: string;
     readonly: boolean;
     showHTML: boolean;
     onHTMLChange: (html: string) => void;
+    onNewLineKeyPress: () => void;
 }
 
 class BlockParagraph extends React.Component<Props, { }> {
@@ -26,11 +28,13 @@ class BlockParagraph extends React.Component<Props, { }> {
     private renderEditable(){
         return (
             <ContentEditable
+                id={this.props.id}
                 tagName='div'
                 className='editable'
                 disabled={this.props.readonly}
                 html={this.props.html}
                 onChange={e => this.onChange(e)}
+                onKeyDown={e => this.onKeyDown(e)}
             />
         );
     }
@@ -47,6 +51,13 @@ class BlockParagraph extends React.Component<Props, { }> {
 
     private onChange(event: ContentEditableEvent){
         this.props.onHTMLChange(event.target.value);
+    }
+
+    private onKeyDown(event: React.KeyboardEvent<HTMLDivElement>){
+        if (event.key === 'Enter'){
+            event.preventDefault();
+            this.props.onNewLineKeyPress();
+        }
     }
 
 }

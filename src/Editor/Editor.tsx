@@ -5,8 +5,10 @@ import Toolbar from '../Toolbar/Toolbar';
 import BlockParagraph from '../BlockParagraph/BlockParagraph';
 import BlockHTML from '../BlockHTML/BlockHTML';
 import BlockWrapper from '../BlockWrapper/BlockWrapper';
+import { getRandomId } from '../helpers/getRandomId';
+import { selectElementContents } from '../helpers/selectElementContents';
 
-type HTMLBlock = { type: 'paragraph' | 'html', html: string, readonly: boolean, showHTML: boolean };
+type HTMLBlock = { id: string, type: 'paragraph' | 'html', html: string, readonly: boolean, showHTML: boolean };
 
 interface State {
     HTMLBlocks: Array<HTMLBlock>;
@@ -71,11 +73,16 @@ class Editor extends React.Component<EditorProps, State> {
                 onMenuButtonDelete={() => this.onBlockHTMLRemove(index)}
                 onMenuButtonToggleReadonly={() => this.onBlockHTMLToggleReadonly({ block, index })}
             >
-                <BlockParagraph 
+                <BlockParagraph
+                    id={block.id}
                     html={block.html}
-                    onHTMLChange={html => this.onBlockHTMLChange({ html, block, index })}
                     readonly={block.readonly}
                     showHTML={block.showHTML}
+                    onHTMLChange={html => this.onBlockHTMLChange({ html, block, index })}
+                    onNewLineKeyPress={() => {
+                        this.onAddingBlockParagraph(index);
+                        setTimeout(() => this.focusAndSelectBlock(index + 1), 10);
+                    }}
                 />
             </BlockWrapper>
         );
@@ -173,6 +180,15 @@ class Editor extends React.Component<EditorProps, State> {
         this.setState({ HTMLBlocks: newBlocks });
     }
 
+    private focusAndSelectBlock(index: number){
+        const block = this.state.HTMLBlocks[index];
+        if (!block) throw new Error('No HTML block with index ' + index);
+        const element = document.getElementById(block.id);
+        if (!element) throw new Error(`HTML block element with id ${block.id} not found`);
+        element.focus({});
+        selectElementContents(element);
+    }
+
     private getHTMLBlocksFromHTML(html: string): HTMLBlock[] {
         const container = document.createElement('div');
         container.innerHTML = html;
@@ -195,12 +211,14 @@ class Editor extends React.Component<EditorProps, State> {
             return { 
                 type: 'paragraph', 
                 html: element.outerHTML.trim(),
+                id: getRandomId(),
                 ...defaultProperties 
             }
         }
         else {
             return { 
-                type: 'html', 
+                type: 'html',
+                id: getRandomId(),
                 html: element.outerHTML.trim(),
                 ...defaultProperties
             }
