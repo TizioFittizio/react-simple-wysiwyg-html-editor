@@ -50,15 +50,9 @@ class Editor extends React.Component<EditorProps, State> {
             case 'paragraph':
                 return this.renderBlockParagraph(block, index);
             case 'html':
-                return (
-                    <BlockWrapper
-                        key={index}
-                        icon='edit'
-                    >
-                        <BlockHTML
-                        />
-                    </BlockWrapper>
-                );
+                return this.renderBlockHTML(block, index);
+            default:
+                throw new Error(`Rendering of unknown block type: ${block.type}`);     
         }
     }
 
@@ -73,6 +67,7 @@ class Editor extends React.Component<EditorProps, State> {
                 showMenuButtonDelete
                 showMenuButtonToggleReadonly
                 showMenuButtonToggleShowHTML
+                onMenuButtonAddHTML={() => this.onAddingBlockHTML(index)}
                 onMenuButtonAddParagraph={() => this.onAddingBlockParagraph(index)}
                 onMenuButtonDelete={() => this.onBlockHTMLRemove(index)}
                 onMenuButtonToggleReadonly={() => this.onBlockHTMLToggleReadonly({ block, index })}
@@ -88,6 +83,24 @@ class Editor extends React.Component<EditorProps, State> {
         );
     }
 
+    private renderBlockHTML(block: HTMLBlock, index: number){
+        return (
+            <BlockWrapper
+                key={index}
+                icon='edit'
+                showMenuOnClick
+                showMenuButtonAddHTML
+                showMenuButtonAddParagraph
+                showMenuButtonDelete
+                showMenuButtonToggleShowHTML
+                onMenuButtonDelete={() => this.onBlockHTMLRemove(index)}
+            >
+                <BlockHTML
+                />
+            </BlockWrapper>
+        );
+    }
+
     private renderBlockAdd(){
         return (
             <BlockWrapper
@@ -95,6 +108,7 @@ class Editor extends React.Component<EditorProps, State> {
                 showMenuOnClick
                 showMenuButtonAddParagraph
                 showMenuButtonAddHTML
+                onMenuButtonAddHTML={() => this.onAddingBlockHTML(this.state.HTMLBlocks.length)}
                 onMenuButtonAddParagraph={() => this.onAddingBlockParagraph(this.state.HTMLBlocks.length)}
             >
                 <div style={{ width: '100%', height: '50px' }} />
@@ -106,6 +120,17 @@ class Editor extends React.Component<EditorProps, State> {
         const newBlocks = this.state.HTMLBlocks.slice();
         const newElement = document.createElement('p');
         newElement.innerHTML = 'Text';
+        const newBlock = this.getHTMLBlockFromElement(newElement);
+        newBlocks.splice(index + 1, 0, newBlock);
+        const newHTML = this.getHTMLFromHTMLBlocks(newBlocks);
+        this.setState({ HTMLBlocks: this.getHTMLBlocksFromHTML(newHTML) });
+        this.props.onHTMLEdit(newHTML);
+    }
+
+    private onAddingBlockHTML(index: number){
+        const newBlocks = this.state.HTMLBlocks.slice();
+        const newElement = document.createElement('div');
+        newElement.innerHTML = 'HTML';
         const newBlock = this.getHTMLBlockFromElement(newElement);
         newBlocks.splice(index + 1, 0, newBlock);
         const newHTML = this.getHTMLFromHTMLBlocks(newBlocks);
