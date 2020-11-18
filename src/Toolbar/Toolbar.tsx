@@ -35,11 +35,8 @@ class Toolbar extends React.Component<Props, State> {
                 {this.renderAddIndentationButton()}
                 {this.renderRemoveIndentationButton()}
                 {this.renderSeparator()}
-                {this.renderAddQuoteButton()}
                 {this.renderAddHyperlinkButton()}
                 {this.renderSeparator()}
-                {this.renderUndoButton()}
-                {this.renderRedoButton()}
                 {this.renderRemoveFormattingButton()}
             </div>
         );
