@@ -39,30 +39,36 @@ class BlockWrapper extends React.Component<Props, State> {
                 onMouseLeave={() => this.setState({ showOptionsIcon: false })}
             >
                 {this.renderOptions()}
-                {this.renderMenu()}
                 {this.renderChildren()}
             </div>
         );
     }
 
     private renderOptions(){
-        let iconClassName = 'options-icon';
-        if (!this.state.showOptionsIcon) iconClassName += ' hide';
         return (
             <div className='block-wrapper-options'>
-                <div 
-                    className={iconClassName}
-                    onClick={() => {
-                        if (!this.props.showMenuOnClick) return;
-                        this.setState({ showMenu: true });
-                    }}
-                >
-                    <img
-                        width='15px'
-                        height='15px' 
-                        src={this.props.icon === 'new' ? BlockWrapperIcons.ADD : BlockWrapperIcons.EDIT} 
-                    />
-                </div>
+                {this.renderIcon()}
+                {this.renderMenu()}
+            </div>
+        );
+    }
+
+    private renderIcon(){
+        let iconClassName = 'options-icon';
+        if (!this.state.showOptionsIcon || this.state.showMenu) iconClassName += ' hide';
+        return (
+            <div 
+                className={iconClassName}
+                onClick={() => {
+                    if (!this.props.showMenuOnClick) return;
+                    this.setState({ showMenu: true });
+                }}
+            >
+                <img
+                    width='15px'
+                    height='15px' 
+                    src={this.props.icon === 'new' ? BlockWrapperIcons.ADD : BlockWrapperIcons.EDIT} 
+                />
             </div>
         );
     }
